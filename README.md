@@ -109,4 +109,4 @@ Contributions, ideas, and issues welcome! Please open a pull request or issue.
 
 ## 📄 License
 
-MIT License
+[MIT License](./LICENSE)
