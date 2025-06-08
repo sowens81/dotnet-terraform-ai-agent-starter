@@ -1,0 +1,33 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    uses: sowens81/dotnet-terraform-ai-agent-starter/.github/jobs/ci.yml@main
+
+  deploy-dev:
+    needs: ci
+    uses: sowens81/dotnet-terraform-ai-agent-starter/.github/jobs/cd.yml@main
+    with:
+      environment: dev
+
+  deploy-qa:
+    needs: deploy-dev
+    uses: sowens81/dotnet-terraform-ai-agent-starter/.github/jobs/cd.yml@main
+    with:
+      environment: qa
+
+  deploy-staging:
+    needs: deploy-qa
+    uses: sowens81/dotnet-terraform-ai-agent-starter/.github/jobs/cd.yml@main
+    with:
+      environment: staging
+
+  deploy-prod:
+    needs: deploy-staging
+    uses: sowens81/dotnet-terraform-ai-agent-starter/.github/jobs/cd.yml@main
+    with:
+      environment: prod

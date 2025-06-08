@@ -49,11 +49,15 @@ ScaffoldingReadMe.txt
 *.backup
 *.tfvars
 *.tfvars.json
+!example.tfvars
+!example.tfvars.json
 terraform.tfvars.json
 crash.log
 override.tf*
 *_override.tf*
 .terraform.lock.hcl
+*.tfplan
+*.tfplan.json
 
 # ========================================
 # Kubernetes / AKS / Helm

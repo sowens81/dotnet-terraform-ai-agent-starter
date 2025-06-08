@@ -5,7 +5,7 @@ A .NET 8-based intelligent agent that uses [Semantic Kernel](https://github.com/
 ## 🚀 Features
 
 - 🔍 Automatically discovers and parses existing Terraform modules  
-- 🤖 Uses AI (OpenAI / Azure OpenAI) to interpret user intent  
+- 🤖 Uses AI (Azure AI Foundry) to interpret user intent  
 - 🧱 Dynamically assembles Terraform `main.tf`, `variables.tf`, and `outputs.tf`  
 - 🔌 Plugin-based architecture powered by Semantic Kernel  
 - 🧪 Ready for CLI or Web API integration  
@@ -53,18 +53,84 @@ cd dotnet-terraform-ai-agent-starter
 dotnet restore
 ```
 
-### 3. Add your OpenAI credentials
+### 3. Add your Azure AI Foundry credentials
 
-Set these environment variables:
+Set these environment variables or update `appsettings.json`:
 
 ```bash
-export OPENAI_API_KEY=your-key
-export OPENAI_MODEL=gpt-4
+export AZURE_AI_FOUNDARY_ENDPOINT="https://${azure_ai_foundry_resource}.services.ai.azure.com/api/projects/${azure_ai_foundry_project}"
+export AZURE_AI_FOUNDARY_MODEL_DEPLOYMENT_NAME="gpt-4"
 ```
 
-Or edit `appsettings.json`.
+Alternatively, you can configure this directly in `appsettings.json` as follows:
 
-### 4. Run the agent
+```json
+{
+  "AzureAiFoundry": {
+    "Endpoint": "https://${azure_ai_foundry_resource}.services.ai.azure.com/api/projects/${azure_ai_foundry_project}",
+    "ModelDeploymentName": "gpt-4"
+  }
+}
+```
+
+Replace `${azure_ai_foundry_resource}` and `${azure_ai_foundry_project}` with your actual Azure AI Foundry resource name and project name.
+
+### 4. Create an Azure Service Principal for Terraform Authentication
+
+To deploy to Azure using Terraform in GitHub Actions, you'll need to authenticate via an **Azure Service Principal**. Follow the steps below to create one and store the credentials in GitHub Secrets.
+
+#### Create a Service Principal
+
+1. **Login to Azure CLI**: 
+   If you don't already have the Azure CLI installed, download and install it from [here](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). Once installed, log in using your Azure account:
+   
+   ```bash
+   az login
+   ```
+
+2. **Create a Service Principal**: 
+   Run the following command to create a Service Principal with the necessary permissions (e.g., `Contributor` role):
+   
+   ```bash
+   az ad sp create-for-rbac --name terraform-github-action --role Contributor --scopes /subscriptions/{subscription-id}
+   ```
+
+   Replace `{subscription-id}` with your Azure subscription ID. This will output credentials like this:
+   
+   ```json
+   {
+     "appId": "00000000-0000-0000-0000-000000000000",
+     "displayName": "terraform-github-action",
+     "password": "your-client-secret",
+     "tenant": "00000000-0000-0000-0000-000000000000"
+   }
+   ```
+
+   You'll need to save the following information:
+   - `appId` → **ARM_CLIENT_ID**
+   - `password` → **ARM_CLIENT_SECRET**
+   - `tenant` → **ARM_TENANT_ID**
+
+3. **Find Your Azure Subscription ID**:
+   To get the Subscription ID, run:
+   
+   ```bash
+   az account show --query id --output tsv
+   ```
+
+   This will output your Subscription ID, which you'll need to store as **ARM_SUBSCRIPTION_ID**.
+
+#### Add the Service Principal Credentials to GitHub Secrets
+
+1. Go to your GitHub repository.
+2. Navigate to **Settings** → **Secrets** → **New repository secret**.
+3. Add the following secrets with the corresponding values:
+   - `ARM_CLIENT_ID`: The **appId** from the Service Principal output.
+   - `ARM_CLIENT_SECRET`: The **password** from the Service Principal output.
+   - `ARM_TENANT_ID`: The **tenant** from the Service Principal output.
+   - `ARM_SUBSCRIPTION_ID`: Your Azure **subscription ID**.
+
+### 5. Run the agent
 
 ```bash
 dotnet run
@@ -89,15 +155,14 @@ The AI will:
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download)
 - [Terraform CLI](https://developer.hashicorp.com/terraform/install)
-- OpenAI or Azure OpenAI key
+- Azure AI Foundry credentials (explained above)
+- Azure Service Principal for authentication (explained above)
 
 ---
 
 ## 🧪 Roadmap
 
-- [ ] Web UI (Blazor or React)  
-- [ ] Module validation via `terraform validate`  
-- [ ] Dependency-aware planning with SK Planner  
+- [ ] TBD
 
 ---
 

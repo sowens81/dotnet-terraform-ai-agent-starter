@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using System.Diagnostics;
+using Azure;
 using Azure.AI.Agents.Persistent;
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +9,14 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-var projectEndpoint = configuration["AzureAiFoundry:Endpoint"];
-var modelDeploymentName = configuration["AzureAiFoundry:ModelDeploymentName"];
+var projectEndpoint =
+    configuration["AzureAiFoundry:Endpoint"]
+    ?? throw new InvalidOperationException("Missing AzureAiFoundry:Endpoint configuration");
+var modelDeploymentName =
+    configuration["AzureAiFoundry:ModelDeploymentName"]
+    ?? throw new InvalidOperationException(
+        "Missing AzureAiFoundry:ModelDeploymentName configuration"
+    );
 
 //Create a PersistentAgentsClient and PersistentAgent.
 PersistentAgentsClient client = new(projectEndpoint, new DefaultAzureCredential());
@@ -32,7 +39,7 @@ client.Messages.CreateMessage(
     "Hi, Agent! Draw a graph for a line with a slope of 4 and y-intercept of 9."
 );
 
-//Have Agent beging processing user's question with some additional instructions associated with the ThreadRun.
+//Have Agent begin processing user's question with some additional instructions associated with the ThreadRun.
 ThreadRun run = client.Runs.CreateRun(
     thread.Id,
     agent.Id,

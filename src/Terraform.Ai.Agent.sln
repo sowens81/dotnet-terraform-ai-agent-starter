@@ -5,10 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terraform.Ai.Agent.Worker", "Terraform.Ai.Agent.Worker\Terraform.Ai.Agent.Worker.csproj", "{DF1B37D0-872C-476B-A8C5-6510E36CB0A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terraform.Ai.Agent.Domain", "Terraform.Ai.Agent.Domain\Terraform.Ai.Agent.Domain.csproj", "{E676BD40-CC28-4759-95E1-5345DF2D3C50}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terraform.Ai.Agent.Infrastructure", "Terraform.Ai.Agent.Infrastructure\Terraform.Ai.Agent.Infrastructure.csproj", "{04B578AF-AACF-48C1-B79A-45DB7FB2F737}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

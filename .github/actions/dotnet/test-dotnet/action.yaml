@@ -1,0 +1,9 @@
+name: Test .NET
+description: Test .NET projects & Publish Test Results
+
+runs:
+  using: "composite"
+  steps:
+    - name: .Net Unit Test Runner
+      run: dotnet test --no-build --verbosity normal
+      shell: pwsh

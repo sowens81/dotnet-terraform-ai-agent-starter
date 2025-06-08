@@ -1,0 +1,15 @@
+name: Setup .NET
+description: Common setup for .NET projects
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Restore .Net Dependencies
+      run: dotnet restore
+      shell: pwsh
+    - name: Build .Net Project
+      run: dotnet build --no-restore
+      shell: pwsh
